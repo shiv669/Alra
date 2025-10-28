@@ -1,0 +1,444 @@
+/**
+ * ALRA Styles
+ * 
+ * This CSS file contains all the visual styling for ALRA UI elements
+ * It's injected into every webpage so that ALRA's nudges, highlights, 
+ * and other UI elements look beautiful and consistent across all sites
+ * 
+ * We organize styles by component:
+ * 1. ALRA Container - Base styles for all ALRA elements
+ * 2. Highlights - Glowing effects on important content
+ * 3. Nudges - Action suggestion boxes (green/blue/orange)
+ * 4. Summaries - Article summary boxes
+ * 5. Predictions - Next tab/action indicators
+ * 6. Metrics - Dashboard and statistics display
+ * 7. Animations - Glowing, fading, sliding effects
+ */
+
+/* ============================================================================ */
+/* PART 1: Base Container Styles                                             */
+/* ============================================================================ */
+/* All ALRA elements inherit these base styles */
+
+.alra-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  z-index: 999999;
+  /* high z-index so ALRA UI appears on top of everything */
+}
+
+/* ============================================================================ */
+/* PART 2: Highlight Styles - Glowing effects on important content           */
+/* ============================================================================ */
+/* When we highlight important paragraphs, they glow with this effect */
+
+.alra-highlighted {
+  box-shadow: 0 0 15px rgba(66, 153, 225, 0.6) !important;
+  border-left: 4px solid #4299e1 !important;
+  padding-left: 10px !important;
+  background-color: rgba(66, 153, 225, 0.05) !important;
+  transition: all 0.3s ease;
+  /* smooth animation when highlighting */
+}
+
+/* Make highlight even brighter on hover */
+.alra-highlighted:hover {
+  box-shadow: 0 0 25px rgba(66, 153, 225, 0.8) !important;
+  background-color: rgba(66, 153, 225, 0.1) !important;
+}
+
+/* ============================================================================ */
+/* PART 3: Nudge Styles - Actionable suggestions                              */
+/* ============================================================================ */
+/* Nudges appear as boxes suggesting the next action for the user */
+
+.alra-nudge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: alra-slide-in 0.4s ease-out;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 400px;
+}
+
+/* Nudge hover effect - becomes more prominent */
+.alra-nudge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* GREEN nudge - Suggested action (recommended) */
+.alra-nudge-suggested {
+  background-color: #f0f9f5;
+  border-left: 4px solid #48bb78;
+}
+
+.alra-nudge-suggested .alra-nudge-icon {
+  color: #48bb78;
+  font-size: 20px;
+}
+
+.alra-nudge-suggested .alra-nudge-text {
+  color: #22543d;
+  font-weight: 600;
+}
+
+/* BLUE nudge - Optional action (if interested) */
+.alra-nudge-optional {
+  background-color: #f0f5ff;
+  border-left: 4px solid #4299e1;
+}
+
+.alra-nudge-optional .alra-nudge-icon {
+  color: #4299e1;
+  font-size: 20px;
+}
+
+.alra-nudge-optional .alra-nudge-text {
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+/* ORANGE nudge - High priority (time-sensitive) */
+.alra-nudge-priority {
+  background-color: #fff5e6;
+  border-left: 4px solid #ed8936;
+}
+
+.alra-nudge-priority .alra-nudge-icon {
+  color: #ed8936;
+  font-size: 20px;
+}
+
+.alra-nudge-priority .alra-nudge-text {
+  color: #7c2d12;
+  font-weight: 600;
+}
+
+/* Nudge icon - the emoji at the start */
+.alra-nudge-icon {
+  flex-shrink: 0;
+  font-size: 24px;
+  width: 32px;
+  text-align: center;
+}
+
+/* Nudge text content */
+.alra-nudge-text {
+  flex: 1;
+  font-size: 14px;
+}
+
+/* Close button for nudges */
+.alra-nudge-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  transition: color 0.2s;
+}
+
+.alra-nudge-close:hover {
+  color: #333;
+}
+
+/* ============================================================================ */
+/* PART 4: Summary Styles - Article summaries in boxes                        */
+/* ============================================================================ */
+/* When we summarize an article, it appears in this styled box */
+
+.alra-summary {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  animation: alra-fade-in 0.5s ease-out;
+}
+
+/* Summary header with icon */
+.alra-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4299e1;
+  margin-bottom: 12px;
+}
+
+.alra-summary-header::before {
+  content: "📖";
+  font-size: 16px;
+}
+
+/* Summary content - the actual summarized text */
+.alra-summary-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+/* Action buttons in summary */
+.alra-summary-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.alra-summary-actions button {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.alra-summary-actions button:hover {
+  background: #3182ce;
+  transform: translateY(-1px);
+}
+
+/* ============================================================================ */
+/* PART 5: Prediction Styles - Next tab/action indicators                     */
+/* ============================================================================ */
+/* Visual cues that predict the user's next action */
+
+.alra-prediction {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 50px;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: alra-pulse 2s ease-in-out infinite;
+  z-index: 999998;
+  cursor: pointer;
+}
+
+.alra-prediction-arrow {
+  font-size: 20px;
+  animation: alra-bounce 1s ease-in-out infinite;
+}
+
+.alra-prediction-text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ============================================================================ */
+/* PART 6: Metrics Styles - Dashboard and statistics                         */
+/* ============================================================================ */
+/* Shows the productivity impact in a nice dashboard */
+
+.alra-metrics-dashboard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.alra-metrics-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+/* Grid of metric cards */
+.alra-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Individual metric card */
+.alra-metric-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.alra-metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.alra-metric-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.alra-metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.alra-metric-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* ============================================================================ */
+/* PART 7: Animations - Glowing, fading, sliding effects                     */
+/* ============================================================================ */
+/* Smooth animations to make ALRA feel alive and responsive */
+
+/* Glow animation - infinite pulsing effect */
+@keyframes alra-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(102, 126, 234, 1);
+  }
+}
+
+/* Slide-in animation - elements slide in from bottom */
+@keyframes alra-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade-in animation - elements gradually appear */
+@keyframes alra-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Bounce animation - bouncing effect for arrows and icons */
+@keyframes alra-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Pulse animation - gentle pulsing for predictions */
+@keyframes alra-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ============================================================================ */
+/* PART 8: Responsive Design - Mobile friendly                               */
+/* ============================================================================ */
+/* Make ALRA look good on mobile devices */
+
+@media (max-width: 768px) {
+  .alra-nudge {
+    max-width: 100%;
+  }
+
+  .alra-prediction {
+    bottom: 20px;
+    right: 20px;
+    font-size: 12px;
+  }
+
+  .alra-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .alra-metric-value {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alra-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alra-prediction {
+    bottom: 15px;
+    right: 15px;
+    padding: 12px 16px;
+  }
+}
+
+/* ============================================================================ */
+/* PART 9: Accessibility & Print Styles                                       */
+/* ============================================================================ */
+/* Make sure ALRA works in all contexts */
+
+/* When printing, hide ALRA UI (shouldn't clutter printed page) */
+@media print {
+  .alra-container,
+  .alra-nudge,
+  .alra-summary,
+  .alra-prediction,
+  .alra-metrics-dashboard {
+    display: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .alra-nudge {
+    border: 2px solid;
+  }
+
+  .alra-summary {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support (respect user preferences) */
+@media (prefers-reduced-motion: reduce) {
+  .alra-nudge,
+  .alra-summary,
+  .alra-prediction,
+  .alra-metric-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}

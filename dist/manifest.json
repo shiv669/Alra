@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "ALRA - AI Browser Assistant",
+  "version": "1.0.0",
+  "description": "Predict. Clean. Guide. Make Chrome smarter.",
+  "default_locale": "en",
+
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],  "host_permissions": [
+    "<all_urls>"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "ALRA - AI Browser Assistant"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["injected-ai-bridge.js", "776.js", "819.js", "summarizer.js", "tab-predictor.js", "*.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "optional_permissions": [
+    "identity",
+    "management"
+  ]
+}
