@@ -8,7 +8,12 @@ export declare class MultimodalAI {
     private waveOverlay;
     private resultContainer;
     private isProcessing;
+    private aiAvailable;
     constructor();
+    /**
+     * Check if Gemini Nano AI is available
+     */
+    private checkAIAvailability;
     private init;
     private injectStyles;
     /**
@@ -27,6 +32,10 @@ export declare class MultimodalAI {
      * Hide result container
      */
     private hideResult;
+    /**
+     * Show fallback message when AI is not available
+     */
+    private showFallbackMessage;
     /**
      * Analyze an image using Prompt API multimodal input
      */

@@ -9,10 +9,32 @@ export class MultimodalAI {
   private waveOverlay: HTMLElement | null = null;
   private resultContainer: HTMLElement | null = null;
   private isProcessing: boolean = false;
+  private aiAvailable: boolean = false;
 
   constructor() {
     this.init();
     this.injectStyles();
+    this.checkAIAvailability();
+  }
+
+  /**
+   * Check if Gemini Nano AI is available
+   */
+  private async checkAIAvailability(): Promise<void> {
+    try {
+      // Wait for AI bridge to be injected
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const result = await this.sendToAIBridge("CHECK_AVAILABILITY", {});
+      this.aiAvailable = result === "available";
+      
+      if (!this.aiAvailable) {
+        console.warn("ALRA: Gemini Nano AI not available. Multimodal features will show fallback.");
+      }
+    } catch (error) {
+      this.aiAvailable = false;
+      console.warn("ALRA: Could not check AI availability:", error);
+    }
   }
 
   private init(): void {
@@ -391,10 +413,45 @@ export class MultimodalAI {
   }
 
   /**
+   * Show fallback message when AI is not available
+   */
+  private showFallbackMessage(): void {
+    this.showResult(
+      "⚠️ AI Not Available",
+      `<div style="text-align: center;">
+        <p style="margin-bottom: 12px;">Gemini Nano AI is not currently available in your browser.</p>
+        <p style="font-size: 13px; opacity: 0.9; margin-bottom: 12px;">To enable ALRA's AI features:</p>
+        <ol style="text-align: left; font-size: 13px; opacity: 0.9; line-height: 1.8;">
+          <li>Use <strong>Chrome Canary</strong> or <strong>Chrome Dev</strong> (version 127+)</li>
+          <li>Go to <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">chrome://flags</code></li>
+          <li>Enable these flags:
+            <ul style="margin-top: 6px;">
+              <li><code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">Prompt API for Gemini Nano</code></li>
+              <li><code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">Summarization API for Gemini Nano</code></li>
+            </ul>
+          </li>
+          <li>Restart Chrome</li>
+          <li>Go to <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">chrome://components</code></li>
+          <li>Find "Optimization Guide On Device Model" and click <strong>Check for update</strong></li>
+          <li>Wait for Gemini Nano to download (~1.7GB)</li>
+        </ol>
+        <p style="font-size: 13px; opacity: 0.9; margin-top: 12px;">Once enabled, ALRA will have access to powerful on-device AI! 🚀</p>
+      </div>`,
+      "⚠️"
+    );
+  }
+
+  /**
    * Analyze an image using Prompt API multimodal input
    */
   async summarizeImage(imageElement?: HTMLImageElement): Promise<void> {
     if (this.isProcessing) return;
+
+    // Check AI availability first
+    if (!this.aiAvailable) {
+      this.showFallbackMessage();
+      return;
+    }
 
     const img = imageElement || (window as any).__alraContextImage;
     if (!img) {
@@ -438,6 +495,12 @@ export class MultimodalAI {
    */
   async summarizeYouTubeVideo(): Promise<void> {
     if (this.isProcessing) return;
+
+    // Check AI availability first
+    if (!this.aiAvailable) {
+      this.showFallbackMessage();
+      return;
+    }
 
     if (!window.location.hostname.includes("youtube.com")) {
       this.showResult("Error", "This feature only works on YouTube pages.", "⚠️");
@@ -486,6 +549,12 @@ Thumbnail: ${thumbnail}
   async proofreadText(text?: string): Promise<void> {
     if (this.isProcessing) return;
 
+    // Check AI availability first
+    if (!this.aiAvailable) {
+      this.showFallbackMessage();
+      return;
+    }
+
     const selectedText = text || window.getSelection()?.toString().trim();
     if (!selectedText) {
       this.showResult("Error", "Please select some text first.", "⚠️");
@@ -513,6 +582,12 @@ Thumbnail: ${thumbnail}
    */
   async translateText(text?: string, targetLang: string = "es"): Promise<void> {
     if (this.isProcessing) return;
+
+    // Check AI availability first
+    if (!this.aiAvailable) {
+      this.showFallbackMessage();
+      return;
+    }
 
     const selectedText = text || window.getSelection()?.toString().trim();
     if (!selectedText) {

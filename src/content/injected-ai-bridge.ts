@@ -9,8 +9,22 @@
   console.log("🌉 ALRA AI Bridge: Injected into page context");
   console.log("🔍 window.ai available:", 'ai' in window);
 
-  if (!('ai' in window)) {
+  const aiAvailable = 'ai' in window;
+  
+  if (!aiAvailable) {
     console.log("⚠️ ALRA AI Bridge: window.ai not available on this page");
+    
+    // Still listen for availability checks
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'ALRA_AI_REQUEST' && event.data?.action === 'CHECK_AVAILABILITY') {
+        window.postMessage({
+          type: 'ALRA_AI_RESPONSE',
+          id: event.data.id,
+          result: 'unavailable',
+          error: null
+        }, '*');
+      }
+    });
     return;
   }
 
@@ -18,14 +32,22 @@
   console.log("✅ ALRA AI Bridge: window.ai found! Initializing...");
 
   // Listen for requests from content script
-  window.addEventListener('ALRA_AI_REQUEST', async (event: any) => {
-    const { action, data, requestId } = event.detail;
+  window.addEventListener('message', async (event) => {
+    if (event.data?.type !== 'ALRA_AI_REQUEST') return;
+    
+    const { action, data, id } = event.data;
     console.log(`📨 ALRA AI Bridge: Received request ${action}`);
 
     try {
       let result = null;
 
-      if (action === 'SUMMARIZE') {
+      // Check AI availability
+      if (action === 'CHECK_AVAILABILITY') {
+        result = 'available';
+        console.log("✅ ALRA AI Bridge: AI is available");
+      }
+
+      else if (action === 'SUMMARIZE') {
         // Create summarizer session and summarize
         const summarizer = await ai.summarizer.create({
           type: 'key-points',
@@ -177,20 +199,24 @@
       }
 
       // Send response back to content script
-      window.dispatchEvent(new CustomEvent('ALRA_AI_RESPONSE', {
-        detail: { requestId, success: true, result }
-      }));
+      window.postMessage({
+        type: 'ALRA_AI_RESPONSE',
+        id: id,
+        result: result,
+        error: null
+      }, '*');
 
     } catch (error) {
       console.error("❌ ALRA AI Bridge: Error processing request", error);
-      window.dispatchEvent(new CustomEvent('ALRA_AI_RESPONSE', {
-        detail: { requestId, success: false, error: String(error) }
-      }));
+      window.postMessage({
+        type: 'ALRA_AI_RESPONSE',
+        id: id,
+        result: null,
+        error: String(error)
+      }, '*');
     }
   });
 
-  // Notify content script that bridge is ready
-  window.dispatchEvent(new CustomEvent('ALRA_AI_BRIDGE_READY'));
   console.log("✅ ALRA AI Bridge: Ready and listening for requests");
 
 })();
