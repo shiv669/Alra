@@ -93,18 +93,31 @@ export class DeviceSync {
     // Sync when tab is hidden/closed
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        this.syncToCloud();
+        this.syncToCloud().catch(() => {
+          // Silently handle errors (e.g., extension context invalidated)
+        });
       }
     });
 
     // Sync before page unload
     window.addEventListener('beforeunload', () => {
-      this.syncToCloud();
+      this.syncToCloud().catch(() => {
+        // Silently handle errors
+      });
     });
 
     // Periodic sync every 2 minutes (for safety)
-    setInterval(() => {
-      this.syncToCloud();
+    const syncInterval = setInterval(() => {
+      // Check if extension is still valid before syncing
+      try {
+        chrome.runtime.id;
+        this.syncToCloud().catch(() => {
+          // Silently handle errors
+        });
+      } catch (e) {
+        // Extension context invalidated, stop the interval
+        clearInterval(syncInterval);
+      }
     }, 120000);
   }
 
@@ -295,6 +308,14 @@ https://github.com/example | GitHub Repository | Practical implementation`,
   private async syncToCloud(): Promise<void> {
     if (!this.syncEnabled) return;
 
+    // Check if extension context is still valid
+    try {
+      chrome.runtime.id;
+    } catch (e) {
+      // Extension context invalidated, silently return
+      return;
+    }
+
     // Generate recommendations if we don't have any
     if (this.recommendedTabs.length === 0) {
       await this.generateRecommendedTabs();
@@ -332,7 +353,10 @@ https://github.com/example | GitHub Repository | Practical implementation`,
       console.log('☁️ ALRA: Session synced to Chrome Storage:', session.recommendedTabs.length, 'tabs');
       console.log('📱 ALRA: Tabs will appear in Chrome\'s "Recent Tabs" on all your devices!');
     } catch (error) {
-      console.error('❌ ALRA: Sync failed:', error);
+      // Silently fail if extension context invalidated
+      if (error instanceof Error && !error.message.includes('Extension context invalidated')) {
+        console.debug('ALRA: Sync failed:', error.message);
+      }
     }
   }
 

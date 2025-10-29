@@ -41,20 +41,32 @@ class MetricsTracker {
     }
 
     try {
+      // Check if extension context is still valid
+      chrome.runtime.id;
       await chrome.storage.local.set({ alraMetrics: this.metrics });
     } catch (e) {
-      console.warn('Could not save metrics:', e);
+      // Silently fail if extension context invalidated (normal during reload)
+      if (e instanceof Error && !e.message.includes('Extension context invalidated')) {
+        console.debug('Could not save metrics:', e.message);
+      }
     }
   }
 
   async getMetrics(): Promise<ProductivityMetrics> {
     try {
+      // Check if extension context is still valid
+      chrome.runtime.id;
+      
       const result = await chrome.storage.local.get('alraMetrics');
       if (result.alraMetrics) {
         this.metrics = result.alraMetrics;
       }
     } catch (e) {
-      console.warn('Could not load metrics:', e);
+      // Silently fail if extension context invalidated (normal during reload)
+      // Only log other types of errors
+      if (e instanceof Error && !e.message.includes('Extension context invalidated')) {
+        console.debug('Could not load metrics:', e.message);
+      }
     }
     return { ...this.metrics };
   }
