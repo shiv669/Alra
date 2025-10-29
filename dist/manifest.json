@@ -9,7 +9,8 @@
     "tabs",
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "bookmarks"
   ],  "host_permissions": [
     "<all_urls>"
   ],

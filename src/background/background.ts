@@ -469,6 +469,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
+  if (request.action === "ADD_BOOKMARK") {
+    // Smart nudge wants to bookmark a page
+    console.log('📚 ALRA Background: Adding bookmark...', request.url);
+    
+    chrome.bookmarks.create({
+      title: request.title || 'ALRA Bookmark',
+      url: request.url
+    }, (bookmark) => {
+      if (chrome.runtime.lastError) {
+        sendResponse({ success: false, error: chrome.runtime.lastError.message });
+      } else {
+        console.log('✅ ALRA: Bookmark created successfully');
+        sendResponse({ success: true, bookmark });
+      }
+    });
+    
+    return true;
+  }
+
   if (request.action === "UPDATE_METRICS") {
     // content script found a metric to update
     // (e.g., "I just summarized an article!")

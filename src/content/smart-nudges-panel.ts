@@ -136,12 +136,22 @@ export class SmartNudgesPanel {
     `;
     document.head.appendChild(style);
 
-    document.body.appendChild(this.overlay);
-    document.body.appendChild(this.panel);
+    // DON'T append to body yet - wait until show() is called
+    // This prevents any auto-showing issues
+    // document.body.appendChild(this.overlay);
+    // document.body.appendChild(this.panel);
   }
 
   async show(): Promise<void> {
     if (!this.overlay || !this.panel) return;
+
+    // Append to body if not already there
+    if (!document.body.contains(this.overlay)) {
+      document.body.appendChild(this.overlay);
+    }
+    if (!document.body.contains(this.panel)) {
+      document.body.appendChild(this.panel);
+    }
 
     this.overlay.style.display = 'block';
     this.panel.style.display = 'block';
@@ -155,6 +165,14 @@ export class SmartNudgesPanel {
 
     this.overlay.style.display = 'none';
     this.panel.style.display = 'none';
+    
+    // Optional: Remove from DOM to be extra safe
+    if (document.body.contains(this.overlay)) {
+      this.overlay.remove();
+    }
+    if (document.body.contains(this.panel)) {
+      this.panel.remove();
+    }
   }
 
   private async generateSmartSuggestions(): Promise<void> {
@@ -487,25 +505,230 @@ Examples:
     // Smart fallback suggestions based on page type
     if (url.includes('github.com')) {
       suggestions.push(
-        { id: 'gh1', emoji: '⭐', text: 'Star this repository', category: 'productivity', actionText: 'Star', confidence: 0.9 },
-        { id: 'gh2', emoji: '📖', text: 'Read the documentation', category: 'learning', actionText: 'Read', confidence: 0.8 },
-        { id: 'gh3', emoji: '💾', text: 'Clone this repository', category: 'productivity', actionText: 'Copy URL', confidence: 0.7 },
-        { id: 'gh4', emoji: '🔔', text: 'Watch for updates', category: 'productivity', actionText: 'Watch', confidence: 0.8 }
+        { 
+          id: 'gh1', 
+          emoji: '⭐', 
+          text: 'Star this repository', 
+          category: 'productivity', 
+          actionText: 'Star', 
+          confidence: 0.9,
+          action: () => {
+            const starBtn = document.querySelector<HTMLButtonElement>('button[data-test-id="star-button"], button[aria-label*="Star"]');
+            if (starBtn) {
+              starBtn.click();
+              this.showToast('⭐ Repository starred!');
+            } else {
+              this.showToast('⚠️ Please star manually');
+            }
+          }
+        },
+        { 
+          id: 'gh2', 
+          emoji: '📖', 
+          text: 'Read the documentation', 
+          category: 'learning', 
+          actionText: 'Read', 
+          confidence: 0.8,
+          action: () => {
+            const readmeSection = document.querySelector('#readme');
+            if (readmeSection) {
+              readmeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              this.showToast('📖 Scrolled to documentation');
+            } else {
+              this.showToast('📖 Look for README section');
+            }
+          }
+        },
+        { 
+          id: 'gh3', 
+          emoji: '💾', 
+          text: 'Copy clone URL', 
+          category: 'productivity', 
+          actionText: 'Copy', 
+          confidence: 0.7,
+          action: async () => {
+            try {
+              const cloneBtn = document.querySelector<HTMLButtonElement>('button[data-testid="clone-button"]');
+              if (cloneBtn) {
+                cloneBtn.click();
+                this.showToast('💾 Clone dialog opened');
+              } else {
+                // Try to find the HTTPS URL
+                const httpsUrl = window.location.href.replace('github.com', 'github.com') + '.git';
+                await navigator.clipboard.writeText(httpsUrl);
+                this.showToast('💾 Clone URL copied!');
+              }
+            } catch (e) {
+              this.showToast('⚠️ Could not copy URL');
+            }
+          }
+        },
+        { 
+          id: 'gh4', 
+          emoji: '🔔', 
+          text: 'Watch for updates', 
+          category: 'productivity', 
+          actionText: 'Watch', 
+          confidence: 0.8,
+          action: () => {
+            const watchBtn = document.querySelector<HTMLButtonElement>('button[data-test-id="watch-button"]');
+            if (watchBtn) {
+              watchBtn.click();
+              this.showToast('🔔 Watch menu opened');
+            } else {
+              this.showToast('🔔 Look for Watch button');
+            }
+          }
+        }
       );
     } else if (url.includes('youtube.com')) {
       suggestions.push(
-        { id: 'yt1', emoji: '💾', text: 'Save to Watch Later', category: 'productivity', actionText: 'Save', confidence: 0.9 },
-        { id: 'yt2', emoji: '👍', text: 'Like this video', category: 'productivity', actionText: 'Like', confidence: 0.8 },
-        { id: 'yt3', emoji: '📝', text: 'Take notes while watching', category: 'learning', actionText: 'Notes', confidence: 0.7 },
-        { id: 'yt4', emoji: '🔗', text: 'Share with someone', category: 'productivity', actionText: 'Share', confidence: 0.6 }
+        { 
+          id: 'yt1', 
+          emoji: '💾', 
+          text: 'Save to Watch Later', 
+          category: 'productivity', 
+          actionText: 'Save', 
+          confidence: 0.9,
+          action: () => {
+            const saveBtn = document.querySelector<HTMLButtonElement>('button[aria-label*="Save"]');
+            if (saveBtn) {
+              saveBtn.click();
+              this.showToast('💾 Save menu opened');
+            } else {
+              this.showToast('💾 Look for Save button');
+            }
+          }
+        },
+        { 
+          id: 'yt2', 
+          emoji: '👍', 
+          text: 'Like this video', 
+          category: 'productivity', 
+          actionText: 'Like', 
+          confidence: 0.8,
+          action: () => {
+            const likeBtn = document.querySelector<HTMLButtonElement>('button[aria-label*="like this video"]');
+            if (likeBtn && likeBtn.getAttribute('aria-pressed') !== 'true') {
+              likeBtn.click();
+              this.showToast('👍 Video liked!');
+            } else if (likeBtn) {
+              this.showToast('👍 Already liked!');
+            } else {
+              this.showToast('⚠️ Like button not found');
+            }
+          }
+        },
+        { 
+          id: 'yt3', 
+          emoji: '📝', 
+          text: 'Open transcript', 
+          category: 'learning', 
+          actionText: 'Transcript', 
+          confidence: 0.7,
+          action: () => {
+            const moreBtn = document.querySelector<HTMLButtonElement>('button[aria-label="More actions"]');
+            if (moreBtn) {
+              moreBtn.click();
+              setTimeout(() => {
+                const transcriptBtn = document.querySelector<HTMLElement>('ytd-menu-service-item-renderer:has-text("transcript")');
+                if (transcriptBtn) transcriptBtn.click();
+              }, 200);
+              this.showToast('📝 Looking for transcript...');
+            } else {
+              this.showToast('📝 Check video description');
+            }
+          }
+        },
+        { 
+          id: 'yt4', 
+          emoji: '🔗', 
+          text: 'Copy video link', 
+          category: 'productivity', 
+          actionText: 'Copy', 
+          confidence: 0.9,
+          action: async () => {
+            try {
+              await navigator.clipboard.writeText(window.location.href);
+              this.showToast('🔗 Video link copied!');
+            } catch (e) {
+              this.showToast('⚠️ Could not copy link');
+            }
+          }
+        }
       );
     } else {
-      // Generic suggestions
+      // Generic suggestions with REAL actions
       suggestions.push(
-        { id: 'g1', emoji: '📚', text: 'Bookmark this page', category: 'productivity', actionText: 'Bookmark', confidence: 0.9 },
-        { id: 'g2', emoji: '📤', text: 'Share this article', category: 'productivity', actionText: 'Share', confidence: 0.7 },
-        { id: 'g3', emoji: '📝', text: 'Summarize key points', category: 'learning', actionText: 'Summarize', confidence: 0.8 },
-        { id: 'g4', emoji: '🧘', text: 'Take a short break', category: 'wellness', actionText: 'Start', confidence: 0.6 }
+        { 
+          id: 'g1', 
+          emoji: '📚', 
+          text: 'Bookmark this page', 
+          category: 'productivity', 
+          actionText: 'Bookmark', 
+          confidence: 0.9,
+          action: async () => {
+            try {
+              await chrome.runtime.sendMessage({
+                action: 'ADD_BOOKMARK',
+                url: window.location.href,
+                title: document.title
+              });
+              this.showToast('📚 Page bookmarked!');
+            } catch (e) {
+              // Fallback: use keyboard shortcut hint
+              this.showToast('📚 Press Ctrl+D to bookmark');
+            }
+          }
+        },
+        { 
+          id: 'g2', 
+          emoji: '📤', 
+          text: 'Copy page link', 
+          category: 'productivity', 
+          actionText: 'Copy', 
+          confidence: 0.9,
+          action: async () => {
+            try {
+              await navigator.clipboard.writeText(window.location.href);
+              this.showToast('📤 Link copied to clipboard!');
+            } catch (e) {
+              this.showToast('⚠️ Could not copy link');
+            }
+          }
+        },
+        { 
+          id: 'g3', 
+          emoji: '📝', 
+          text: 'Get AI summary', 
+          category: 'learning', 
+          actionText: 'Summarize', 
+          confidence: 0.8,
+          action: () => {
+            // Trigger the summary modal from FAB menu
+            const summaryBtn = document.querySelector<HTMLElement>('[data-alra-action="summary"]');
+            if (summaryBtn) {
+              summaryBtn.click();
+              this.hide(); // Hide nudges panel
+              this.showToast('📝 Generating summary...');
+            } else {
+              this.showToast('📝 Use FAB menu → AI Summary');
+            }
+          }
+        },
+        { 
+          id: 'g4', 
+          emoji: '🔍', 
+          text: 'Search in this page', 
+          category: 'navigation', 
+          actionText: 'Search', 
+          confidence: 0.7,
+          action: () => {
+            // Trigger browser's find in page (Ctrl+F)
+            document.execCommand('find');
+            this.showToast('🔍 Press Ctrl+F to search');
+          }
+        }
       );
     }
 

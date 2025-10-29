@@ -27,6 +27,7 @@ import { SummaryModal } from "./summary-modal";
 import { MetricsModal } from "./metrics-modal";
 import { SmartNudgesPanel } from "./smart-nudges-panel";
 import { DeviceSync } from "./device-sync";
+import { ProductivityMode } from "./productivity-mode";
 
 // ============================================================================
 // STEP 1: Define Core Interfaces
@@ -73,6 +74,7 @@ let globalSummaryModal: SummaryModal | null = null;
 let globalMetricsModal: MetricsModal | null = null;
 let globalNudgesPanel: SmartNudgesPanel | null = null;
 let globalDeviceSync: DeviceSync | null = null;
+let globalProductivityMode: ProductivityMode | null = null;
 let summaryAvailable = false;
 let nudgesCount = 0;
 
@@ -609,7 +611,7 @@ async function optimizePageLayout(page_content: PageContent): Promise<void> {
     let clutter_pixels = 0;
     const clutter_elements: HTMLElement[] = [];
 
-    console.log("\n🔍 ALRA: Scanning for clutter elements...");
+    console.log(`\n🔍 ALRA: Scanning for clutter elements..`);
     ad_selectors.forEach((selector) => {
       try {
         document.querySelectorAll(selector).forEach((element) => {
@@ -621,12 +623,47 @@ async function optimizePageLayout(page_content: PageContent): Promise<void> {
             clutter_found++;
             clutter_pixels += pixels;
             clutter_elements.push(el);
+            
+            // Actually remove/hide the ads
+            el.style.display = 'none';
+            el.style.visibility = 'hidden';
+            el.style.opacity = '0';
+            el.style.height = '0';
+            el.style.width = '0';
+            el.style.overflow = 'hidden';
+            el.setAttribute('data-alra-blocked', 'true');
           }
         });
       } catch (error) {
         // Invalid selector, skip
       }
     });
+
+    // Also hide common ad containers
+    const adContainers = [
+      'aside[class*="ad"]',
+      'div[class*="sidebar"][class*="ad"]',
+      '.advertisement',
+      '.ad-container',
+      '.banner-ad'
+    ];
+
+    adContainers.forEach((selector) => {
+      try {
+        document.querySelectorAll(selector).forEach((el) => {
+          const element = el as HTMLElement;
+          if (element.offsetWidth > 0 && element.offsetHeight > 0) {
+            element.style.display = 'none';
+            element.setAttribute('data-alra-blocked', 'true');
+            clutter_found++;
+          }
+        });
+      } catch (error) {
+        // Invalid selector, skip
+      }
+    });
+
+    console.log(`   ✅ Blocked ${clutter_found} ads/clutter elements`);
 
     const viewportArea = window.innerWidth * window.innerHeight;
     const clutterPercentage = ((clutter_pixels / viewportArea) * 100).toFixed(1);
@@ -1025,6 +1062,9 @@ function initializeFloatingMenu(): void {
   // Create device sync
   globalDeviceSync = new DeviceSync();
 
+  // Create productivity mode
+  globalProductivityMode = new ProductivityMode();
+
   globalFloatingMenu = new FloatingMenu([
     {
       id: 'summary',
@@ -1062,11 +1102,13 @@ function initializeFloatingMenu(): void {
       badge: nudgesCount,
     },
     {
-      id: 'settings',
-      label: 'Extension Popup',
-      icon: '⚙️',
-      action: () => {
-        alert('💡 Click the ALRA extension icon in your browser toolbar to open settings!');
+      id: 'productivity',
+      label: 'Productivity Mode',
+      icon: '🎯',
+      action: async () => {
+        if (globalProductivityMode) {
+          await globalProductivityMode.showSettings();
+        }
       },
     },
     {
@@ -1077,6 +1119,14 @@ function initializeFloatingMenu(): void {
         if (globalDeviceSync) {
           await globalDeviceSync.showSyncSettings();
         }
+      },
+    },
+    {
+      id: 'settings',
+      label: 'Extension Info',
+      icon: '⚙️',
+      action: () => {
+        alert('💡 ALRA - AI Browser Assistant\n\nClick the extension icon in your toolbar for detailed stats!\n\n✨ AI Summary\n📊 Productivity Stats\n💡 Smart Nudges\n🎯 Productivity Mode\n🔄 Device Sync');
       },
     },
   ]);

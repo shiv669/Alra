@@ -618,7 +618,7 @@ https://github.com/example | GitHub Repository | Practical implementation`,
           </div>
         </div>
         
-        <div style="background: #EFF6FF; border-left: 3px solid #3B82F6; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <div style="background: #EFF6FF; border-left: 3px solid #3B82F6; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
           <div style="font-size: 13px; color: #1E40AF; line-height: 1.5;">
             <strong>How it works:</strong><br>
             • When you close tabs, ALRA saves recommended next tabs to Chrome Sync<br>
@@ -627,6 +627,20 @@ https://github.com/example | GitHub Repository | Practical implementation`,
             • No extension needed on other devices - uses Chrome's built-in sync!
           </div>
         </div>
+        
+        ${this.syncEnabled ? `
+        <div style="background: #ECFDF5; border-left: 3px solid #10B981; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+          <div style="font-size: 13px; color: #065F46; line-height: 1.5;">
+            <strong>✅ Sync is Active!</strong><br><br>
+            <strong>To verify on other devices:</strong><br>
+            1. Open Chrome on another device (phone/tablet)<br>
+            2. Tap the ⋮ menu (three dots)<br>
+            3. Select "Recent tabs"<br>
+            4. Look for tabs prefixed with "[ALRA Recommended]"<br><br>
+            <em>Synced ${this.recommendedTabs.length} recommended tabs</em>
+          </div>
+        </div>
+        ` : ''}
         
         <div style="display: flex; gap: 12px;">
           <button id="sync-close" style="flex: 1; padding: 12px; background: #F3F4F6; border: none; border-radius: 10px; font-weight: 600; color: #6B7280; cursor: pointer;">

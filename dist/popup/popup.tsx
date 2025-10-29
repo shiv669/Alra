@@ -62,31 +62,34 @@ function App() {
       chrome.storage.local.get(
         ["browsing_history", "metrics", "preferences"],
         (result) => {
-          // Get current active tab info
-          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs[0]) {
-              const currentTab = tabs[0];
-              let totalTime = 0;
-              let tabCount = result.browsing_history?.length || 0;
+          // Get current active tab info AND count ALL open tabs
+          chrome.tabs.query({ active: true, currentWindow: true }, (activeTabs) => {
+            // Query ALL tabs across all windows
+            chrome.tabs.query({}, (allTabs) => {
+              if (activeTabs[0]) {
+                const currentTab = activeTabs[0];
+                let totalTime = 0;
+                const tabCount = allTabs.length; // Count of currently open tabs (real-time)
 
-              // Calculate total time spent browsing
-              if (result.browsing_history && result.browsing_history.length > 0) {
-                totalTime = result.browsing_history.reduce(
-                  (sum: number, session: any) => sum + (session.durationOnTab || 0),
-                  0
-                );
+                // Calculate total time spent browsing
+                if (result.browsing_history && result.browsing_history.length > 0) {
+                  totalTime = result.browsing_history.reduce(
+                    (sum: number, session: any) => sum + (session.durationOnTab || 0),
+                    0
+                  );
+                }
+
+                setSessionData({
+                  currentPage: currentTab.title || "—",
+                  totalTabsVisited: tabCount,
+                  timeSpentBrowsing: Math.floor(totalTime / 60), // convert to minutes
+                  adsDetected: result.metrics?.potentialAdsDetected || 0,
+                });
+
+                // Generate insights
+                generateInsights(result, tabCount);
               }
-
-              setSessionData({
-                currentPage: currentTab.title || "—",
-                totalTabsVisited: tabCount,
-                timeSpentBrowsing: Math.floor(totalTime / 60), // convert to minutes
-                adsDetected: result.metrics?.potentialAdsDetected || 0,
-              });
-
-              // Generate insights
-              generateInsights(result, tabCount);
-            }
+            });
           });
 
           if (result.preferences) {
@@ -178,9 +181,9 @@ function App() {
         <p className="text-xs font-bold text-gray-700 uppercase tracking-wide">📊 Your Session</p>
         
         <div className="grid grid-cols-3 gap-3">
-          {/* Tabs Visited */}
+          {/* Tabs Open (Real-time) */}
           <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-3 border border-blue-100 shadow-sm hover:shadow-md transition-shadow">
-            <p className="text-xs text-blue-600 font-medium">Tabs</p>
+            <p className="text-xs text-blue-600 font-medium">Open</p>
             <p className="text-2xl font-bold text-blue-700">{sessionData.totalTabsVisited}</p>
           </div>
 

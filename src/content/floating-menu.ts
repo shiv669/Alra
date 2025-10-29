@@ -132,6 +132,8 @@ export class FloatingMenu {
       .alra-fab-menu-item:nth-child(2) { animation-delay: 0.1s; }
       .alra-fab-menu-item:nth-child(3) { animation-delay: 0.15s; }
       .alra-fab-menu-item:nth-child(4) { animation-delay: 0.2s; }
+      .alra-fab-menu-item:nth-child(5) { animation-delay: 0.25s; }
+      .alra-fab-menu-item:nth-child(6) { animation-delay: 0.3s; }
 
       .alra-fab-menu-item:hover {
         transform: translateX(-4px) scale(1.02);
