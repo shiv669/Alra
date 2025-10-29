@@ -33,7 +33,7 @@ export declare class MultimodalAI {
      */
     private hideResult;
     /**
-     * Show fallback message when AI is not available
+     * Show cute fallback message when AI is not available
      */
     private showFallbackMessage;
     /**

@@ -413,31 +413,17 @@ export class MultimodalAI {
   }
 
   /**
-   * Show fallback message when AI is not available
+   * Show cute fallback message when AI is not available
    */
   private showFallbackMessage(): void {
     this.showResult(
-      "⚠️ AI Not Available",
-      `<div style="text-align: center;">
-        <p style="margin-bottom: 12px;">Gemini Nano AI is not currently available in your browser.</p>
-        <p style="font-size: 13px; opacity: 0.9; margin-bottom: 12px;">To enable ALRA's AI features:</p>
-        <ol style="text-align: left; font-size: 13px; opacity: 0.9; line-height: 1.8;">
-          <li>Use <strong>Chrome Canary</strong> or <strong>Chrome Dev</strong> (version 127+)</li>
-          <li>Go to <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">chrome://flags</code></li>
-          <li>Enable these flags:
-            <ul style="margin-top: 6px;">
-              <li><code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">Prompt API for Gemini Nano</code></li>
-              <li><code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">Summarization API for Gemini Nano</code></li>
-            </ul>
-          </li>
-          <li>Restart Chrome</li>
-          <li>Go to <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">chrome://components</code></li>
-          <li>Find "Optimization Guide On Device Model" and click <strong>Check for update</strong></li>
-          <li>Wait for Gemini Nano to download (~1.7GB)</li>
-        </ol>
-        <p style="font-size: 13px; opacity: 0.9; margin-top: 12px;">Once enabled, ALRA will have access to powerful on-device AI! 🚀</p>
+      "🤖 Oops!",
+      `<div style="text-align: center; padding: 20px 10px;">
+        <div style="font-size: 48px; margin-bottom: 12px;">😅</div>
+        <p style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">I couldn't analyze that!</p>
+        <p style="font-size: 13px; opacity: 0.9;">AI features need Chrome Canary with Gemini Nano enabled.</p>
       </div>`,
-      "⚠️"
+      "🤖"
     );
   }
 
@@ -449,7 +435,12 @@ export class MultimodalAI {
 
     // Check AI availability first
     if (!this.aiAvailable) {
-      this.showFallbackMessage();
+      // Show wave animation to indicate we tried
+      this.showWaveAnimation();
+      setTimeout(async () => {
+        await this.hideWaveAnimation();
+        this.showFallbackMessage();
+      }, 1500); // Show wave for 1.5 seconds before showing fallback
       return;
     }
 
@@ -498,7 +489,12 @@ export class MultimodalAI {
 
     // Check AI availability first
     if (!this.aiAvailable) {
-      this.showFallbackMessage();
+      // Show wave animation to indicate we tried
+      this.showWaveAnimation();
+      setTimeout(async () => {
+        await this.hideWaveAnimation();
+        this.showFallbackMessage();
+      }, 1500);
       return;
     }
 
@@ -551,7 +547,12 @@ Thumbnail: ${thumbnail}
 
     // Check AI availability first
     if (!this.aiAvailable) {
-      this.showFallbackMessage();
+      // Show wave animation to indicate we tried
+      this.showWaveAnimation();
+      setTimeout(async () => {
+        await this.hideWaveAnimation();
+        this.showFallbackMessage();
+      }, 1500);
       return;
     }
 
@@ -585,7 +586,12 @@ Thumbnail: ${thumbnail}
 
     // Check AI availability first
     if (!this.aiAvailable) {
-      this.showFallbackMessage();
+      // Show wave animation to indicate we tried
+      this.showWaveAnimation();
+      setTimeout(async () => {
+        await this.hideWaveAnimation();
+        this.showFallbackMessage();
+      }, 1500);
       return;
     }
 
