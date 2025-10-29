@@ -28,6 +28,7 @@ import { MetricsModal } from "./metrics-modal";
 import { SmartNudgesPanel } from "./smart-nudges-panel";
 import { DeviceSync } from "./device-sync";
 import { ProductivityMode } from "./productivity-mode";
+import { MultimodalAI } from "./multimodal-ai";
 
 // ============================================================================
 // STEP 1: Define Core Interfaces
@@ -75,6 +76,7 @@ let globalMetricsModal: MetricsModal | null = null;
 let globalNudgesPanel: SmartNudgesPanel | null = null;
 let globalDeviceSync: DeviceSync | null = null;
 let globalProductivityMode: ProductivityMode | null = null;
+let globalMultimodalAI: MultimodalAI | null = null;
 let summaryAvailable = false;
 let nudgesCount = 0;
 
@@ -1065,6 +1067,9 @@ function initializeFloatingMenu(): void {
   // Create productivity mode
   globalProductivityMode = new ProductivityMode();
 
+  // Create multimodal AI
+  globalMultimodalAI = new MultimodalAI();
+
   globalFloatingMenu = new FloatingMenu([
     {
       id: 'summary',
@@ -1078,6 +1083,16 @@ function initializeFloatingMenu(): void {
         }
       },
       badge: summaryAvailable ? 1 : 0,
+    },
+    {
+      id: 'multimodal',
+      label: 'Multimodal AI',
+      icon: '🤖',
+      action: async () => {
+        if (globalMultimodalAI) {
+          await globalMultimodalAI.showQuickActions();
+        }
+      },
     },
     {
       id: 'metrics',
@@ -1126,7 +1141,7 @@ function initializeFloatingMenu(): void {
       label: 'Extension Info',
       icon: '⚙️',
       action: () => {
-        alert('💡 ALRA - AI Browser Assistant\n\nClick the extension icon in your toolbar for detailed stats!\n\n✨ AI Summary\n📊 Productivity Stats\n💡 Smart Nudges\n🎯 Productivity Mode\n🔄 Device Sync');
+        alert('💡 ALRA - AI Browser Assistant\n\nClick the extension icon in your toolbar for detailed stats!\n\n✨ AI Summary\n🤖 Multimodal AI (Image, Video, Text)\n📊 Productivity Stats\n💡 Smart Nudges\n🎯 Productivity Mode\n🔄 Device Sync');
       },
     },
   ]);

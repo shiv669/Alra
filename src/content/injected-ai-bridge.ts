@@ -67,6 +67,71 @@
         console.log("✅ ALRA AI Bridge: Rewriting complete");
       }
 
+      else if (action === 'ANALYZE_IMAGE') {
+        // Use Prompt API with image input (multimodal)
+        if ('languageModel' in ai) {
+          const session = await ai.languageModel.create({
+            systemPrompt: 'You are an expert at analyzing images and providing detailed descriptions.'
+          });
+          
+          // Convert base64 to blob if needed
+          const imageData = data.image;
+          
+          result = await session.prompt(data.prompt, {
+            image: imageData  // Multimodal input
+          });
+          console.log("✅ ALRA AI Bridge: Image analysis complete");
+        } else {
+          throw new Error('Multimodal Prompt API not available');
+        }
+      }
+
+      else if (action === 'ANALYZE_VIDEO') {
+        // Analyze video context using Prompt API
+        if ('languageModel' in ai) {
+          const session = await ai.languageModel.create();
+          result = await session.prompt(data.prompt + '\n\n' + data.context);
+          console.log("✅ ALRA AI Bridge: Video analysis complete");
+        } else {
+          throw new Error('Language Model not available');
+        }
+      }
+
+      else if (action === 'PROOFREAD') {
+        // Use Proofreader API or language model
+        if ('proofreader' in ai) {
+          const proofreader = await ai.proofreader.create();
+          result = await proofreader.proofread(data.text);
+          console.log("✅ ALRA AI Bridge: Proofreading complete (native API)");
+        } else if ('languageModel' in ai) {
+          // Fallback to language model
+          const session = await ai.languageModel.create();
+          result = await session.prompt(data.prompt);
+          console.log("✅ ALRA AI Bridge: Proofreading complete (language model)");
+        } else {
+          throw new Error('Proofreading not available');
+        }
+      }
+
+      else if (action === 'TRANSLATE') {
+        // Use Translator API or language model
+        if ('translator' in ai) {
+          const translator = await ai.translator.create({
+            sourceLanguage: 'en',
+            targetLanguage: data.targetLang.toLowerCase()
+          });
+          result = await translator.translate(data.text);
+          console.log("✅ ALRA AI Bridge: Translation complete (native API)");
+        } else if ('languageModel' in ai) {
+          // Fallback to language model
+          const session = await ai.languageModel.create();
+          result = await session.prompt(data.prompt);
+          console.log("✅ ALRA AI Bridge: Translation complete (language model)");
+        } else {
+          throw new Error('Translation not available');
+        }
+      }
+
       else if (action === 'CHECK_CAPABILITIES') {
         // Check what's available
         const capabilities: any = {};

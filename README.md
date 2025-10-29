@@ -1,16 +1,21 @@
-# ALRA - Your AI Browser Companion 🚀# 🧠 ALRA – Chrome's AI-Powered Assistant Extension
+# 🧠 ALRA – Chrome's AI-Powered Assistant Extension
 
+> Built for the Google Chrome Built-in AI Challenge 2025
+> **"Predict. Clean. Guide. Make Chrome smarter."**
 
+## 🌟 **MULTIMODAL AI POWERED** - Competing for "Best Multimodal AI Application"
 
-> Built for the Google Chrome Built-in AI Challenge 2025> **"Predict. Clean. Guide. Make Chrome smarter."**
+ALRA leverages Chrome's **Prompt API multimodal capabilities** to bring cutting-edge AI features:
+- 🖼️ **Image Analysis** - Right-click any image to get AI-powered descriptions and insights
+- 🎥 **YouTube Video Summarization** - Instant AI summaries of video content with key topics
+- 📝 **Smart Proofreading** - Select text and get instant grammar & clarity improvements
+- 🌐 **Instant Translation** - Translate selected text to any language on-demand
 
+All powered by **Gemini Nano on-device** - zero cloud calls, 100% privacy-first.
 
+---
 
-Hey there! 👋 Let me tell you about ALRA - a Chrome extension I built that actually makes browsing the web smarter, not more annoying.---
-
-
-
-## What's This All About?## 🎯 What is ALRA?
+## 🎯 What is ALRA?
 
 
 
@@ -450,23 +455,25 @@ Learned this the hard way. If a feature requires explanation, the UI is wrong. M
 
 
 
-### Features Walkthrough---
+### Features Walkthrough
 
+---
 
+**🤖 Multimodal AI (⭐ NEW - Competition Feature):**
+- Click the FAB button → "🤖 Multimodal AI"
+- **Image Analysis**: Right-click any image → "Analyze with AI" → Get instant AI-generated descriptions
+- **YouTube Summarization**: Click "Summarize Video" on any YouTube page → Get key topics, target audience, educational value
+- **Smart Proofreading**: Select text → Click "Proofread" → Get grammar & clarity improvements
+- **Instant Translation**: Select text → Click "Translate" → Choose language → Get instant translation
+- All powered by **Prompt API multimodal capabilities** with Gemini Nano
 
-**📖 AI Summary:**## 🎓 Think of ALRA As...
-
+**� AI Summary:**
 - Click the FAB button → "✨ AI Summary"
-
-- Wait 2-3 seconds while Gemini Nano analyzes the page🤖 **Your personal browsing co-pilot** → ALRA learns your habits and anticipates needs
-
+- Wait 2-3 seconds while Gemini Nano analyzes the page
 - Get key points in a clean modal
+- Close when done, or read the full article
 
-- Close when done, or read the full article🧹 **A smart janitor** → Cleans up the mess on every website automatically
-
-
-
-**💡 Smart Nudges:**📚 **A research assistant** → Summarizes everything so you don't have to
+**💡 Smart Nudges:**
 
 - Click FAB → "💡 Smart Nudges"
 
