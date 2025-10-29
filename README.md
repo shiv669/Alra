@@ -8,6 +8,7 @@ ALRA leverages Chrome's **Prompt API multimodal capabilities** to bring cutting-
 - 🎥 **YouTube Video Summarization** - Instant AI summaries of video content with key topics
 - 📝 **Smart Proofreading** - Select text and get instant grammar & clarity improvements
 - 🌐 **Instant Translation** - Translate selected text to any language on-demand
+- **Productivity Mode** - According to the related tabs if productivity mode is on you will be only able to open related tabs all other tabs will be blocked 
 
 All powered by **Gemini Nano on-device** - zero cloud calls, 100% privacy-first.
 
