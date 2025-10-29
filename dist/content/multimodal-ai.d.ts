@@ -1,32 +1,58 @@
 /**
- * ALRA Multimodal AI
+ * ALRA Multimodal AI - Wave Animation Version
  *
- * Uses Chrome's Prompt API with multimodal support to:
- * - Summarize images and screenshots
- * - Analyze YouTube videos
- * - Proofread and translate selected text
+ * Features beautiful blue wave animation instead of modals
+ * Results appear inline on the page itself
  */
 export declare class MultimodalAI {
-    private modal;
-    private overlay;
+    private waveOverlay;
+    private resultContainer;
     private isProcessing;
     constructor();
-    private createModal;
-    private setupContextMenuListeners;
-    summarizeImage(imageElement?: HTMLImageElement): Promise<void>;
-    summarizeYouTubeVideo(): Promise<void>;
-    proofreadText(text: string): Promise<void>;
-    translateText(text: string, targetLang?: string): Promise<void>;
-    private imageToBlob;
-    private analyzeImageWithPromptAPI;
-    private analyzeVideoWithPromptAPI;
-    private proofreadWithPromptAPI;
-    private translateWithPromptAPI;
-    show(): Promise<void>;
-    hide(): void;
-    private showLoading;
+    private init;
+    private injectStyles;
+    /**
+     * Show the blue wave animation
+     */
+    private showWaveAnimation;
+    /**
+     * Hide wave animation with smooth fadeout
+     */
+    private hideWaveAnimation;
+    /**
+     * Show result inline on the page
+     */
     private showResult;
-    private showError;
-    private showToast;
+    /**
+     * Hide result container
+     */
+    private hideResult;
+    /**
+     * Analyze an image using Prompt API multimodal input
+     */
+    summarizeImage(imageElement?: HTMLImageElement): Promise<void>;
+    /**
+     * Summarize a YouTube video
+     */
+    summarizeYouTubeVideo(): Promise<void>;
+    /**
+     * Proofread selected text
+     */
+    proofreadText(text?: string): Promise<void>;
+    /**
+     * Translate selected text
+     */
+    translateText(text?: string, targetLang?: string): Promise<void>;
+    /**
+     * Show quick actions menu
+     */
     showQuickActions(): Promise<void>;
+    /**
+     * Setup context menu listeners
+     */
+    private setupContextMenuListeners;
+    /**
+     * Send request to AI bridge
+     */
+    private sendToAIBridge;
 }
