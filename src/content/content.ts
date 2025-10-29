@@ -12,6 +12,16 @@
  * The background script is the "brain" that makes decisions
  */
 
+// Global error handler for extension context invalidation
+// This prevents "Uncaught Error" messages when extension reloads
+window.addEventListener('unhandledrejection', (event) => {
+  const error = event.reason;
+  if (error && error.message && error.message.includes('Extension context invalidated')) {
+    // Silently prevent default - this is expected during extension reload
+    event.preventDefault();
+  }
+});
+
 // CRITICAL: Import webpack public path configuration FIRST
 // This ensures dynamic imports (chunks) load from the extension's context
 import './webpack-public-path';
