@@ -5,6 +5,11 @@
   "description": "Predict. Clean. Guide. Make Chrome smarter.",
   "default_locale": "en",
 
+  "trial_tokens": [
+    "A2mU4Px4fkdI0OUvEiQ6rQdVLYiI88E2F8TsCLpcakP+aXwtcKRPlj0TGXLpEBE0uLbVDHrSegKCvEyi/y7Alw4AAACPeyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vZWppa2Rva2Nua2twcGJoaWhqa2FoY3BqaWduZGtqaWsiLCJmZWF0dXJlIjoiQUlQcm9tcHRBUElNdWx0aW1vZGFsSW5wdXQiLCJleHBpcnkiOjE3NzQzMTA0MDAsImlzVGhpcmRQYXJ0eSI6dHJ1ZX0=",
+    "A6ypGVk6n/dt0GFS3yp6/oNfvrDQLN4AZfImU+CMuditK/r1Pah4ekpCEUfO3Hkrj3zK7wUSjp4L+Oad2ph2HwEAAACAeyJvcmlnaW4iOiJjaHJvbWUtZXh0ZW5zaW9uOi8vZWppa2Rva2Nua2twcGJoaWhqa2FoY3BqaWduZGtqaWsiLCJmZWF0dXJlIjoiQUlXcml0ZXJBUEkiLCJleHBpcnkiOjE3Njk0NzIwMDAsImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="
+  ],
+
   "permissions": [
     "tabs",
     "storage",
