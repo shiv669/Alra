@@ -3,8 +3,6 @@
 > Built for the Google Chrome Built-in AI Challenge 2025
 > **"Predict. Clean. Guide. Make Chrome smarter."**
 
-## 🌟 **MULTIMODAL AI POWERED** - Competing for "Best Multimodal AI Application"
-
 ALRA leverages Chrome's **Prompt API multimodal capabilities** to bring cutting-edge AI features:
 - 🖼️ **Image Analysis** - Right-click any image to get AI-powered descriptions and insights
 - 🎥 **YouTube Video Summarization** - Instant AI summaries of video content with key topics
